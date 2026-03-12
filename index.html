@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zen Flex - Suivi Énergie</title>
+    <style>
+        /* Style global et fond dégradé (Rappel des couleurs de l'app) */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: linear-gradient(135deg, rgba(52, 199, 89, 0.15) 0%, rgba(255, 149, 0, 0.15) 100%), #f2f2f7;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #1c1c1e;
+        }
+
+        /* La carte centrale en Glassmorphism (Effet iOS) */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 32px;
+            padding: 40px;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            margin: 20px;
+        }
+
+        /* Typographie */
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 800;
+        }
+
+        p {
+            font-size: 1.1rem;
+            line-height: 1.5;
+            color: #3a3a3c;
+            margin-bottom: 30px;
+        }
+
+        /* Les petites pilules de couleur */
+        .status-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .badge {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .badge-eco {
+            background-color: rgba(52, 199, 89, 0.2);
+            color: #28a745;
+        }
+
+        .badge-sobriety {
+            background-color: rgba(255, 149, 0, 0.2);
+            color: #ff9500;
+        }
+
+        /* Bouton GitHub */
+        .btn {
+            display: inline-block;
+            background-color: #000;
+            color: #fff;
+            text-decoration: none;
+            padding: 14px 28px;
+            border-radius: 24px;
+            font-weight: bold;
+            transition: transform 0.2s, background-color 0.2s;
+        }
+
+        .btn:hover {
+            background-color: #333;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="glass-card">
+        <h1>Zen Flex</h1>
+        
+        <div class="status-container">
+            <span class="badge badge-eco">Jour Éco</span>
+            <span class="badge badge-sobriety">Sobriété</span>
+        </div>
+
+        <p>L'application iOS open-source pour suivre facilement la couleur de vos jours EDF Zen Flex. Consultez le statut d'aujourd'hui, anticipez demain, et gardez un œil sur l'historique de la semaine.</p>
+        
+        <a href="https://github.com/TON-PSEUDO/EcoEnergie" class="btn">Voir le code source</a>
+    </div>
+
+</body>
+</html>
