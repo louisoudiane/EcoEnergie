@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Zen Flex - Suivi Énergie</title>
     <style>
-        /* Style global et fond dégradé (Rappel des couleurs de l'app) */
         body {
             margin: 0;
             padding: 0;
@@ -18,7 +17,6 @@
             color: #1c1c1e;
         }
 
-        /* La carte centrale en Glassmorphism (Effet iOS) */
         .glass-card {
             background: rgba(255, 255, 255, 0.6);
             backdrop-filter: blur(20px);
@@ -33,21 +31,9 @@
             margin: 20px;
         }
 
-        /* Typographie */
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            font-weight: 800;
-        }
+        h1 { font-size: 2.5rem; margin-bottom: 10px; font-weight: 800; }
+        p { font-size: 1.1rem; line-height: 1.5; color: #3a3a3c; margin-bottom: 30px; }
 
-        p {
-            font-size: 1.1rem;
-            line-height: 1.5;
-            color: #3a3a3c;
-            margin-bottom: 30px;
-        }
-
-        /* Les petites pilules de couleur (En-tête) */
         .status-container {
             display: flex;
             justify-content: center;
@@ -56,23 +42,22 @@
         }
 
         .badge {
-            padding: 8px 16px;
+            padding: 10px 18px;
             border-radius: 20px;
             font-weight: bold;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
-        .badge-eco {
-            background-color: rgba(52, 199, 89, 0.2);
-            color: #28a745;
-        }
+        .badge span.label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.8; margin-bottom: 2px; }
+        
+        /* États de chargement et couleurs */
+        .badge-loading { background-color: rgba(142, 142, 147, 0.2); color: #8e8e93; }
+        .badge-eco { background-color: rgba(52, 199, 89, 0.2); color: #28a745; }
+        .badge-sobriety { background-color: rgba(255, 149, 0, 0.2); color: #ff9500; }
 
-        .badge-sobriety {
-            background-color: rgba(255, 149, 0, 0.2);
-            color: #ff9500;
-        }
-
-        /* --- Section Historique des 7 jours --- */
         .history-section {
             background: rgba(255, 255, 255, 0.4);
             border-radius: 24px;
@@ -87,42 +72,22 @@
             text-transform: uppercase;
             text-align: left;
             margin-bottom: 16px;
-            letter-spacing: 0.5px;
         }
 
-        .history-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-        }
-
-        .day-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .day-label {
-            font-size: 0.85rem;
-            color: #666;
-            font-weight: 600;
-        }
-
+        .history-row { display: flex; justify-content: space-between; align-items: flex-end; }
+        .day-item { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+        .day-label { font-size: 0.85rem; color: #666; font-weight: 600; }
+        
         .capsule {
             width: 24px;
             height: 40px;
             border-radius: 12px;
+            background-color: #d1d1d6; /* Gris par défaut (chargement) */
+            transition: background-color 0.3s ease;
         }
 
-        /* Couleurs pleines pour les pilules de l'historique */
-        .fill-eco {
-            background-color: #34c759;
-        }
-
-        .fill-sobriety {
-            background-color: #ff9500;
-        }
+        .fill-eco { background-color: #34c759; }
+        .fill-sobriety { background-color: #ff9500; }
 
     </style>
 </head>
@@ -132,47 +97,129 @@
         <h1>Zen Flex</h1>
         
         <div class="status-container">
-            <span class="badge badge-eco">Jour Éco</span>
-            <span class="badge badge-sobriety">Sobriété</span>
+            <div id="today-badge" class="badge badge-loading">
+                <span class="label">Aujourd'hui</span>
+                <span id="today-text">Chargement...</span>
+            </div>
+            <div id="tomorrow-badge" class="badge badge-loading">
+                <span class="label">Demain</span>
+                <span id="tomorrow-text">Chargement...</span>
+            </div>
         </div>
 
         <p>L'application iOS pour suivre facilement la couleur de vos jours EDF Zen Flex. Consultez le statut d'aujourd'hui, anticipez demain, et gardez un œil sur votre semaine.</p>
         
         <div class="history-section">
             <div class="history-title">7 derniers jours</div>
-            <div class="history-row">
-                <div class="day-item">
-                    <span class="day-label">Ven</span>
-                    <div class="capsule fill-eco"></div>
+            <div id="history-row" class="history-row">
                 </div>
-                <div class="day-item">
-                    <span class="day-label">Sam</span>
-                    <div class="capsule fill-eco"></div>
-                </div>
-                <div class="day-item">
-                    <span class="day-label">Dim</span>
-                    <div class="capsule fill-eco"></div>
-                </div>
-                <div class="day-item">
-                    <span class="day-label">Lun</span>
-                    <div class="capsule fill-sobriety"></div>
-                </div>
-                <div class="day-item">
-                    <span class="day-label">Mar</span>
-                    <div class="capsule fill-eco"></div>
-                </div>
-                <div class="day-item">
-                    <span class="day-label">Mer</span>
-                    <div class="capsule fill-eco"></div>
-                </div>
-                <div class="day-item">
-                    <span class="day-label">Jeu</span>
-                    <div class="capsule fill-eco"></div>
-                </div>
-            </div>
         </div>
-
     </div>
+
+    <script>
+        // Formate la date locale au format attendu par EDF (YYYY-MM-DD)
+        function formatIsoDate(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        // Interrogation de l'API EDF via un proxy CORS gratuit (allorigins)
+        async function fetchEDFStatus(date) {
+            // Règle du contrat: Les Week-ends sont toujours ÉCO
+            const dayOfWeek = date.getDay();
+            if (dayOfWeek === 0 || dayOfWeek === 6) return 'eco';
+
+            const dateStr = formatIsoDate(date);
+            const targetUrl = `https://particulier.edf.fr/services/rest/opm/getOPMStatut?dateRelevant=${dateStr}`;
+            // On utilise allorigins.win pour contourner le blocage du navigateur
+            const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}&cb=${Date.now()}`;
+
+            try {
+                const response = await fetch(proxyUrl);
+                if (!response.ok) throw new Error('Erreur réseau');
+                const data = await response.json();
+                
+                // Si la couleur est ZENF_PM c'est sobriété, sinon c'est éco
+                const status = data.couleurJourJ || "RAS";
+                return status === "ZENF_PM" ? 'sobriety' : 'eco';
+            } catch (error) {
+                console.error("Impossible de récupérer la date:", dateStr, error);
+                // Si l'API échoue, on renvoie Éco par défaut (ou on pourrait mettre inconnu)
+                return 'eco'; 
+            }
+        }
+
+        // Met à jour un badge principal
+        function updateBadge(elementId, textId, status) {
+            const badge = document.getElementById(elementId);
+            const text = document.getElementById(textId);
+            
+            badge.className = "badge"; // Réinitialise les classes
+            if (status === 'eco') {
+                badge.classList.add('badge-eco');
+                text.innerText = "Jour Éco";
+            } else if (status === 'sobriety') {
+                badge.classList.add('badge-sobriety');
+                text.innerText = "Sobriété";
+            } else {
+                badge.classList.add('badge-loading');
+                text.innerText = "À venir";
+            }
+        }
+
+        // Fonction principale
+        async function loadData() {
+            const today = new Date();
+            
+            // 1. Charger Aujourd'hui et Demain
+            const tomorrow = new Date(today);
+            tomorrow.setDate(today.getDate() + 1);
+
+            fetchEDFStatus(today).then(status => updateBadge('today-badge', 'today-text', status));
+            fetchEDFStatus(tomorrow).then(status => updateBadge('tomorrow-badge', 'tomorrow-text', status));
+
+            // 2. Charger les 7 derniers jours
+            const daysNames = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
+            const historyContainer = document.getElementById('history-row');
+            
+            let historyPromises = [];
+            let historyHTML = '';
+
+            // On génère le HTML vide d'abord pour l'ordre chronologique (J-7 à J-1)
+            for (let i = 7; i >= 1; i--) {
+                const pastDate = new Date(today);
+                pastDate.setDate(today.getDate() - i);
+                
+                historyHTML += `
+                    <div class="day-item" id="hist-item-${i}">
+                        <span class="day-label">${daysNames[pastDate.getDay()]}</span>
+                        <div class="capsule" id="hist-capsule-${i}"></div>
+                    </div>
+                `;
+            }
+            historyContainer.innerHTML = historyHTML;
+
+            // On remplit les données de l'historique
+            for (let i = 7; i >= 1; i--) {
+                const pastDate = new Date(today);
+                pastDate.setDate(today.getDate() - i);
+                
+                fetchEDFStatus(pastDate).then(status => {
+                    const capsule = document.getElementById(`hist-capsule-${i}`);
+                    if (status === 'eco') {
+                        capsule.classList.add('fill-eco');
+                    } else if (status === 'sobriety') {
+                        capsule.classList.add('fill-sobriety');
+                    }
+                });
+            }
+        }
+
+        // Lancer au chargement de la page
+        window.onload = loadData;
+    </script>
 
 </body>
 </html>
