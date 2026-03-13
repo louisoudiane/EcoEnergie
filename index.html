@@ -1,27 +1,68 @@
-<script>
-    async function loadData() {
-        const todayText = document.getElementById('today-text');
-        const tomorrowText = document.getElementById('tomorrow-text');
-        const todayBadge = document.getElementById('today-badge');
-        const tomorrowBadge = document.getElementById('tomorrow-badge');
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zen Flex - Suivi Énergie</title>
+    <style>
+        body { margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: linear-gradient(135deg, rgba(52, 199, 89, 0.15) 0%, rgba(255, 149, 0, 0.15) 100%), #f2f2f7; min-height: 100vh; display: flex; align-items: center; justify-content: center; color: #1c1c1e; }
+        .glass-card { background: rgba(255, 255, 255, 0.6); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.4); border-radius: 32px; padding: 40px; max-width: 400px; width: 90%; text-align: center; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1); margin: 20px; }
+        h1 { font-size: 2.5rem; margin-bottom: 10px; font-weight: 800; }
+        p { font-size: 1.1rem; line-height: 1.5; color: #3a3a3c; margin-bottom: 10px; }
+        .status-container { display: flex; justify-content: center; gap: 15px; margin-bottom: 30px; }
+        .badge { padding: 12px 20px; border-radius: 20px; font-weight: bold; font-size: 1.1rem; display: flex; flex-direction: column; align-items: center; width: 120px; }
+        .badge span.label { font-size: 0.70rem; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.8; margin-bottom: 4px; }
+        .badge-loading { background-color: rgba(142, 142, 147, 0.2); color: #8e8e93; }
+        .badge-eco { background-color: rgba(52, 199, 89, 0.2); color: #28a745; }
+        .badge-sobriety { background-color: rgba(255, 149, 0, 0.2); color: #ff9500; }
+    </style>
+</head>
+<body>
 
-        try {
-            // Lecture du fichier LOCAL (Pas de proxy, pas de latence)
-            const response = await fetch('./data.json?t=' + Date.now());
-            const data = await response.json();
+    <div class="glass-card">
+        <h1>Zen Flex</h1>
+        <div class="status-container">
+            <div id="today-badge" class="badge badge-loading">
+                <span class="label">Aujourd'hui</span>
+                <span id="today-text">...</span>
+            </div>
+            <div id="tomorrow-badge" class="badge badge-loading">
+                <span class="label">Demain</span>
+                <span id="tomorrow-text">...</span>
+            </div>
+        </div>
+        <p>L'application iOS pour suivre facilement la couleur de vos jours EDF Zen Flex.</p>
+        <p style="font-size: 0.9rem; color: #666;">Anticipez les jours Sobriété pour optimiser votre consommation.</p>
+    </div>
 
-            // Mise à jour Aujourd'hui
-            todayBadge.className = "badge " + (data.today === 'sobriety' ? 'badge-sobriety' : 'badge-eco');
-            todayText.innerText = data.today === 'sobriety' ? 'Sobriété' : 'Jour Éco';
+    <script>
+        async function loadData() {
+            const todayText = document.getElementById('today-text');
+            const tomorrowText = document.getElementById('tomorrow-text');
+            const todayBadge = document.getElementById('today-badge');
+            const tomorrowBadge = document.getElementById('tomorrow-badge');
 
-            // Mise à jour Demain
-            tomorrowBadge.className = "badge " + (data.tomorrow === 'sobriety' ? 'badge-sobriety' : 'badge-eco');
-            tomorrowText.innerText = data.tomorrow === 'sobriety' ? 'Sobriété' : 'Jour Éco';
+            try {
+                // Lecture du fichier généré par le robot
+                const response = await fetch('data.json?t=' + Date.now());
+                if (!response.ok) throw new Error("Fichier introuvable");
+                
+                const data = await response.json();
 
-        } catch (e) {
-            todayText.innerText = "Erreur";
-            tomorrowText.innerText = "Erreur";
+                todayBadge.className = "badge " + (data.today === 'sobriety' ? 'badge-sobriety' : 'badge-eco');
+                todayText.innerText = data.today === 'sobriety' ? 'Sobriété' : 'Éco';
+
+                tomorrowBadge.className = "badge " + (data.tomorrow === 'sobriety' ? 'badge-sobriety' : 'badge-eco');
+                tomorrowText.innerText = data.tomorrow === 'sobriety' ? 'Sobriété' : 'À venir';
+
+            } catch (e) {
+                // S'affiche s'il y a un souci avec data.json
+                todayText.innerText = "Erreur";
+                tomorrowText.innerText = "Erreur";
+            }
         }
-    }
-    window.onload = loadData;
-</script>
+        window.onload = loadData;
+    </script>
+
+</body>
+</html>
