@@ -1,0 +1,34 @@
+name: Update ZenFlex Data
+on:
+  schedule:
+    - cron: '0 6,17,18,20 * * *' # S'exécute à 6h, 17h, 18h et 20h
+  workflow_dispatch: # Permet de le lancer manuellement
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch EDF Data
+        run: |
+          TODAY=$(date +%Y-%m-%d)
+          TOMORROW=$(date -d "tomorrow" +%Y-%m-%d)
+          
+          # Récupération Aujourd'hui
+          RESP_J=$(curl -s "https://particulier.edf.fr/services/rest/opm/getOPMStatut?dateRelevant=$TODAY")
+          STATUS_J=$(echo $RESP_J | grep -q "ZENF_PM" && echo "sobriety" || echo "eco")
+          
+          # Récupération Demain
+          RESP_J1=$(curl -s "https://particulier.edf.fr/services/rest/opm/getOPMStatut?dateRelevant=$TOMORROW")
+          STATUS_J1=$(echo $RESP_J1 | grep -q "ZENF_PM" && echo "sobriety" || echo "eco")
+          
+          # Mise à jour du fichier JSON
+          echo "{\"today\": \"$STATUS_J\", \"tomorrow\": \"$STATUS_J1\", \"last_update\": \"$(date)\"}" > data.json
+
+      - name: Commit and Push
+        run: |
+          git config --global user.name "ZenFlex-Bot"
+          git config --global user.email "bot@zenflex.com"
+          git add data.json
+          git commit -m "Mise à jour automatique des données" || exit 0
+          git push
